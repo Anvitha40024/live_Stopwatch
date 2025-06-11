@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>MITS Project – Stopwatch & Clock (Dark Mode)</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f1f5f9;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      gap: 50px;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    .box {
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      text-align: center;
+      width: 320px;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    h1 {
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+
+    .time-display {
+      font-size: 36px;
+      font-weight: bold;
+      margin: 20px 0;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      margin: 5px;
+      cursor: pointer;
+      border: none;
+      border-radius: 6px;
+    }
+
+    .start { background: #22c55e; color: white; }
+    .stop { background: #f97316; color: white; }
+    .reset { background: #ef4444; color: white; }
+
+    .toggle {
+      background: #4b5563;
+      color: white;
+      position: absolute;
+      top: 20px;
+      right: 20px;
+    }
+
+    /* DARK MODE */
+    .dark-mode {
+      background: #111827;
+      color: #f9fafb;
+    }
+
+    .dark-mode .box {
+      background: #1f2937;
+      color: #f9fafb;
+    }
+
+    .dark-mode .time-display {
+      color: #f9fafb;
+    }
+
+    .dark-mode .toggle {
+      background: #d1d5db;
+      color: #111827;
+    }
+  </style>
+</head>
+<body>
+
+  <button class="toggle" onclick="toggleDarkMode()">🌙 Toggle Dark Mode</button>
+
+  <!-- Clock -->
+  <div class="box">
+    <h1>Current Time</h1>
+    <div id="clock" class="time-display">--:--:--</div>
+  </div>
+
+  <!-- Stopwatch -->
+  <div class="box">
+    <h1>Stopwatch</h1>
+    <div id="stopwatch" class="time-display">00:00:00</div>
+    <div>
+      <button class="start" onclick="startStopwatch()">Start</button>
+      <button class="stop" onclick="stopStopwatch()">Stop</button>
+      <button class="reset" onclick="resetStopwatch()">Reset</button>
+    </div>
+  </div>
+
+  <script>
+    // CLOCK
+    function updateClock() {
+      const now = new Date();
+      const hours = String(now.getHours()).padStart(2, '0');
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+      const seconds = String(now.getSeconds()).padStart(2, '0');
+      document.getElementById("clock").textContent = `${hours}:${minutes}:${seconds}`;
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    // STOPWATCH
+    let stopwatchInterval;
+    let elapsedTime = 0;
+
+    function formatTime(totalSeconds) {
+      const hrs = String(Math.floor(totalSeconds / 3600)).padStart(2, '0');
+      const mins = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2, '0');
+      const secs = String(totalSeconds % 60).padStart(2, '0');
+      return `${hrs}:${mins}:${secs}`;
+    }
+
+    function updateStopwatch() {
+      elapsedTime++;
+      document.getElementById("stopwatch").textContent = formatTime(elapsedTime);
+    }
+
+    function startStopwatch() {
+      if (!stopwatchInterval) {
+        stopwatchInterval = setInterval(updateStopwatch, 1000);
+      }
+    }
+
+    function stopStopwatch() {
+      clearInterval(stopwatchInterval);
+      stopwatchInterval = null;
+    }
+
+    function resetStopwatch() {
+      stopStopwatch();
+      elapsedTime = 0;
+      document.getElementById("stopwatch").textContent = "00:00:00";
+    }
+
+    // DARK MODE
+    function toggleDarkMode() {
+      document.body.classList.toggle("dark-mode");
+    }
+  </script>
+
+</body>
+</html>
